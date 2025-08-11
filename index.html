@@ -1,236 +1,871 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>rogerros.com | Lobby</title>
-    <style>
-        /* Estilos generales */
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background: radial-gradient(circle at center, #2e2a3d, #1a1b24);
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #fff;
-        }
-
-        /* Menú deslizante */
-        #menu {
-            position: fixed;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            height: 50px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            overflow: visible;
-            transition: top 0.3s;
-            z-index: 1000;
-            display: inline-block;
-            white-space: nowrap;
-            padding: 0 10px;
-        }
-
-        .botones {
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-        }
-
-        .botones a {
-            margin: 0 5px;
-            padding: 8px 12px;
-            background-color: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: background-color 0.3s;
-        }
-
-        .botones a:hover {
-            background-color: rgba(255, 255, 255, 0.4);
-        }
-
-        /* Galería */
-        .gallery {
-            position: relative;
-            width: 90vw;
-            height: 70vh;
-            perspective: 1500px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .carousel {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            transition: transform 0.3s ease-out;
-        }
-
-        .carousel a {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: var(--image-width, 50vw);
-            height: var(--image-height, 30vw);
-            max-width: 500px;
-            max-height: 300px;
-            margin: calc(-1 * var(--image-height, 30vw) / 2) calc(-1 * var(--image-width, 50vw) / 2);
-            transform-style: preserve-3d;
-            transition: transform 0.5s, opacity 0.5s;
-            opacity: 0.7;
-        }
-
-        .carousel a img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Efecto al acercarse al centro */
-        .carousel a.active {
-            transform: translateZ(var(--active-translateZ, 300px));
-            opacity: 1;
-        }
-
-        /* Botón de autorotación */
-        #autorotation-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-        }
-
-        #autorotation-btn:hover {
-            background-color: rgba(255, 255, 255, 0.4);
-        }
-
-        #autorotation-btn::before {
-            content: '\21BB'; /* Unicode character for a simple rotation arrow */
-            font-size: 24px;
-            color: #fff;
-        }
-
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ICEMIND — Frontier AI Models & Platform</title>
+  <meta name="description" content="ICEMIND builds frontier-grade AI models and an ultra-low-latency platform for enterprises and builders in the United States." />
+  <style>
+    :root { color-scheme: dark; --bg:#07080c; --pane:rgba(255,255,255,.05); --border:rgba(255,255,255,.10); --muted:rgba(255,255,255,.70); --soft:rgba(255,255,255,.55); }
+    * { box-sizing: border-box }
+    html, body { height: 100% }
+    body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; background: var(--bg); color:#fff; }
+    a { color: inherit; text-decoration: none }
+    .container { width:100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    .glass { background: var(--pane); border: 1px solid var(--border); backdrop-filter: blur(12px) saturate(1.2); border-radius: 16px; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding: 12px 16px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor:pointer; border: 1px solid transparent }
+    .btn-primary { background:#fff; color:#000; }
+    .btn-ghost { background: var(--pane); border-color: var(--border); color:#fff; }
+    .grid { display:grid; gap: 16px }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-4 { grid-template-columns: 1fr; }
+    .muted { color: var(--muted) }
+    .soft { color: var(--soft) }
+    header { position: fixed; inset-inline: 0; top:0; z-index: 50; }
+    nav .brand { display:flex; align-items:center; gap:10px; font-weight: 800; letter-spacing: .2px }
+    nav .logo { width:32px; height:32px; border-radius: 10px; background: linear-gradient(135deg, #7cf 0%, #8f7cff 50%, #ff6ac1 100%); box-shadow: 0 10px 40px rgba(140,120,255,.45) }
+    nav .links { display:none; gap:18px; align-items:center }
+    nav a { font-size:14px; opacity:.85 }
+    nav a:hover { opacity:1 }
+    .hero { position: relative; padding-top: 96px; overflow: clip; }
+    .hero .stack { position: relative; z-index: 1; padding: 40px 0 60px }
+    .badge { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius: 999px; border:1px solid var(--border); background: var(--pane); color:#cfe7ff; font-size: 12px }
+    .h1 { font-size: clamp(32px, 6vw, 64px); line-height: 1.05; margin: 12px 0 0; font-weight: 800; letter-spacing: -0.02em }
+    .lead { font-size: clamp(15px, 2.2vw, 18px); line-height: 1.65; margin-top: 16px; max-width: 720px }
+    .stats { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-top: 22px; max-width: 560px }
+    .stat { text-align:center; padding: 14px; border-radius: 14px; border:1px solid var(--border); background: var(--pane) }
+    .stat .v { font-size: 22px; font-weight: 800 }
+    .terminal { border-radius: 16px; border:1px solid var(--border); background:#0a0c14; padding:16px; overflow:auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; font-size:12px; line-height: 1.6 }
+    .trust { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; opacity:.8; margin: 32px 0 0 }
+    .chip { border-radius: 12px; border:1px solid var(--border); background: var(--pane); padding:8px 12px; font-size:12px }
+    section { padding: 64px 0 }
+    .title { text-align:center; margin-bottom: 12px; font-size: clamp(24px,4vw,40px); font-weight: 730 }
+    .subtitle { text-align:center; margin: 8px auto 0; color: var(--muted); max-width: 820px; font-size: 16px }
+    .card { border:1px solid var(--border); background: var(--pane); border-radius: 16px; padding: 18px }
+    .list { margin: 10px 0 0; padding: 0 0 0 16px }
+    .list li { margin: 6px 0; color: var(--muted) }
+    .cta { border-radius: 22px; border:1px solid var(--border); background: linear-gradient(90deg, rgba(124,252,255,.10), rgba(143,124,255,.10), rgba(255,106,193,.10)); padding: 26px }
+    footer { border-top: 1px solid var(--border); padding: 20px 0 40px }
+    .footer-row { display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap }
+    @media (min-width: 760px){ .grid-2{ grid-template-columns: 1.1fr .9fr } .grid-3{ grid-template-columns: repeat(3, 1fr) } .grid-4{ grid-template-columns: repeat(4, 1fr) } nav .links{ display:flex } .hero .stack{ padding: 70px 0 90px } }
+    .hero-grad-1, .hero-grad-2 { position:absolute; inset:0; pointer-events:none }
+    .hero-grad-1 { background: radial-gradient(60% 40% at 50% 0%, rgba(124,252,255,.18), rgba(0,0,0,0)); }
+    .hero-grad-2 { background: radial-gradient(50% 80% at 50% 100%, rgba(255,106,193,.12), rgba(0,0,0,0)); }
+    kbd { background:#0d111a; border:1px solid var(--border); padding:2px 6px; border-radius:6px; font-size:12px }
+    .disclaimer { position: fixed; left: 50%; transform: translateX(-50%); top: 72px; z-index: 60; width: min(1080px, calc(100% - 28px)); display: none; border-radius: 22px; border: 1px solid var(--border); padding: 18px 18px; background: linear-gradient(90deg, rgba(124,252,255,.14), rgba(143,124,255,.14), rgba(255,106,193,.14)), var(--pane); backdrop-filter: blur(10px) saturate(1.2); box-shadow: 0 14px 60px rgba(0,0,0,.48), inset 0 0 0 1px rgba(255,255,255,.04); }
+    .disc-row { display:flex; gap: 14px; align-items: flex-start; flex-wrap: wrap }
+    .disc-dot { width: 12px; height: 12px; border-radius: 999px; background: conic-gradient(from 0deg, #7cf, #8f7cff, #ff6ac1, #7cf); box-shadow: 0 0 28px rgba(140,120,255,.65); margin-top: 6px; flex: 0 0 auto; animation: pulse 1.8s ease-in-out infinite; }
+    .disc-text { font-size: 14px; line-height: 1.7; color: var(--muted); flex: 1 1 auto }
+    .disc-actions { display:flex; gap:8px; flex: 0 0 auto }
+    .disc-btn { font-size:13px; padding:10px 12px; border-radius:12px; border:1px solid transparent; background:#fff; color:#000; cursor:pointer; font-weight:700 }
+    @keyframes pulse { 0%,100%{ opacity:.9 } 50%{ opacity:.55 } }
+  </style>
 </head>
 <body>
-
-    <!-- Menú deslizante -->
-    <nav id="menu">
-        <div class="botones">
-            <a href="index.html">Home</a>
-            <a href="calculator.html">Calculator</a>
-            <a href="music.html">Music</a>
-            <a href="cube.html">Cube</a>
-        </div>
-    </nav>
-
-    <!-- Galería de imágenes -->
-    <div class="gallery">
-        <div class="carousel" id="carousel">
-            <!-- Añade tus imágenes aquí -->
-            <a href="cube.html"><img src="images/modern_galery/cube.png" alt="Imagen 1"></a>
-            <a href="calculator.html"><img src="images/modern_galery/calculator.png" alt="Imagen 2"></a>
-            <a href="music.html"><img src="images/modern_galery/videoedit.png" alt="Imagen 3"></a>
-        </div>
+  <header>
+    <div class="container">
+      <div class="glass" style="margin-top:14px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
+        <a class="brand" href="#">
+          <div class="logo"></div><span>ICEMIND</span>
+        </a>
+        <nav class="links">
+          <a href="#models">Models</a>
+          <a href="#platform">Platform</a>
+          <a href="#benchmarks">Benchmarks</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#docs">Docs</a>
+          <a class="btn btn-primary" href="#cta">Launch Console
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </nav>
+      </div>
     </div>
+  </header>
 
-    <!-- Botón de autorotación -->
-    <button id="autorotation-btn"></button>
+  <div id="disclaimer" class="disclaimer" role="status" aria-live="polite">
+    <div class="disc-row">
+      <div class="disc-dot" aria-hidden="true"></div>
+      <div class="disc-text">
+        <strong>Disclaimer:</strong> This is a temporary placeholder site for ICEMIND. We are <strong>not selling any products</strong> at this time. The product is under active development; no offers are being made and no transactions will be processed on this domain.
+      </div>
+      <div class="disc-actions">
+        <button class="disc-btn" id="disc-ok">Understood</button>
+      </div>
+    </div>
+  </div>
 
-    <script>
-        // JavaScript para el menú deslizante
-        document.addEventListener('mousemove', function(e) {
-            var menu = document.getElementById('menu');
-            if (e.clientY < 60) {
-                menu.style.top = '0';
-            } else {
-                menu.style.top = '-50px';
-            }
-        });
+  <section class="hero" id="hero">
+    <canvas id="gl" style="position:absolute;inset:0;width:100%;height:100%;display:block"></canvas>
+    <div class="hero-grad-1"></div>
+    <div class="hero-grad-2"></div>
 
-        // Variables ajustables para la galería
-        const radius = 400; // Radio del carrusel
-        const imageWidth = 40; // Ancho de la imagen en vw
-        const imageHeight = 25; // Alto de la imagen en vw
-        let autorotate = true; // Estado de la rotación automática
-        let rotationSpeed = 5; // Velocidad de rotación por defecto
+    <div class="container stack grid grid-2">
+      <div>
+        <div class="badge">Model Serving • Inference • Training <span style="opacity:.6">|</span> USA-based</div>
+        <h1 class="h1">Superhuman AI models. <span style="background:linear-gradient(90deg,#7cf,#8f7cff,#ff6ac1);-webkit-background-clip:text;background-clip:text;color:transparent">Cold precision</span>.</h1>
+        <p class="lead muted">ICEMIND delivers frontier-grade foundation models and an ultra-low-latency platform. Build, deploy and scale with enterprise-class security — without megacorp friction.</p>
+        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn btn-primary" href="#pricing">Launch Console
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#docs">Read Docs
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 19V6h10v13M9 6l-4 4v10h14" stroke="#fff" stroke-opacity=".85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="v"><span class="soft">&lt;</span> 12 ms</div><div class="soft" style="font-size:12px;text-transform:uppercase;letter-spacing:.12em;margin-top:4px">Token latency</div></div>
+          <div class="stat"><div class="v">&gt; 99.95%</div><div class="soft" style="font-size:12px;text-transform:uppercase;letter-spacing:.12em;margin-top:4px">Availability</div></div>
+          <div class="stat"><div class="v">US-only</div><div class="soft" style="font-size:12px;text-transform:uppercase;letter-spacing:.12em;margin-top:4px">Data region</div></div>
+        </div>
+      </div>
 
-        // JavaScript para ajustar automáticamente la galería
-        const carousel = document.getElementById('carousel');
-        const items = carousel.getElementsByTagName('a');
-        const itemCount = items.length;
-        const angle = 360 / itemCount;
+      <div>
+        <div class="glass" style="padding:10px">
+          <div class="terminal">
+curl https://api.icemind.ai/v1/chat/completions \
+  -H "Authorization: Bearer $ICEMIND_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "ice-pro-2.1",
+    "messages": [
+      {"role": "user", "content": "Plan a robotics workshop"}
+    ],
+    "stream": true
+  }'
+          </div>
+        </div>
+        <div class="trust">
+          <div class="chip">NASA</div><div class="chip">MIT</div><div class="chip">OpenGov</div>
+          <div class="chip">Axiom</div><div class="chip">Vertex</div><div class="chip">Quantica</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        document.documentElement.style.setProperty('--image-width', `${imageWidth}vw`);
-        document.documentElement.style.setProperty('--image-height', `${imageHeight}vw`);
-        document.documentElement.style.setProperty('--active-translateZ', `${radius / 2}px`);
+  <section id="platform">
+    <div class="container">
+      <div style="text-align:center">
+        <div class="badge">Platform</div>
+        <h2 class="title">A full-stack for intelligent products</h2>
+        <p class="subtitle">From eval-driven training to ultra-fast inference, ICEMIND abstracts the complexity so teams ship in days, not months.</p>
+      </div>
+      <div class="grid grid-3" style="margin-top:20px">
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="chip">Turbo Inference</span>
+          </div>
+          <p class="muted" style="margin-top:10px">Token streaming under 12ms, CUDA graphs, paged KV-cache, tensor parallelism and speculative decoding by default.</p>
+          <button class="btn btn-ghost" style="margin-top:10px">Learn more →</button>
+        </div>
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="chip">Enterprise Guard</span>
+          </div>
+          <p class="muted" style="margin-top:10px">US-only data residency, SOC 2 Type II, private VPC peering, role-based controls, audit logs and content filters.</p>
+          <button class="btn btn-ghost" style="margin-top:10px">Learn more →</button>
+        </div>
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="chip">Custom Training</span>
+          </div>
+          <p class="muted" style="margin-top:10px">SFT/DPO/RLHF pipelines with synthetic data generation, eval gates and autoscaling GPU fleets (H100/B200).</p>
+          <button class="btn btn-ghost" style="margin-top:10px">Learn more →</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        for (let i = 0; i < itemCount; i++) {
-            items[i].style.transform = `rotateY(${i * angle}deg) translateZ(${radius}px)`;
+  <section id="models">
+    <div class="container">
+      <div style="text-align:center">
+        <div class="badge">Models</div>
+        <h2 class="title">Frontier-grade model family</h2>
+        <p class="subtitle">Pick the right tradeoff of reasoning, speed and context length. Drop-in via the ICEMIND API.</p>
+      </div>
+      <div class="grid grid-3" style="margin-top:20px">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3 style="margin:0">ICE-PRO-2.1</h3><span class="chip">GA</span>
+          </div>
+          <p class="muted" style="margin-top:8px">Flagship reasoning model for complex tasks, tool-use and agents.</p>
+          <p class="soft" style="font-size:12px;margin-top:4px">Context 256k • JSON mode • Function calling</p>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+            <a class="btn btn-primary" href="#docs">API Docs →</a>
+            <a class="btn btn-ghost" href="#benchmarks">Benchmarks</a>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3 style="margin:0">ICE-LITE-1.8</h3><span class="chip">GA</span>
+          </div>
+          <p class="muted" style="margin-top:8px">High-throughput model for chat, RAG and support at scale.</p>
+          <p class="soft" style="font-size:12px;margin-top:4px">Context 128k • 2-4× cheaper • Low-latency</p>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+            <a class="btn btn-primary" href="#docs">API Docs →</a>
+            <a class="btn btn-ghost" href="#benchmarks">Benchmarks</a>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3 style="margin:0">ICE-VISION-XL</h3><span class="chip">GA</span>
+          </div>
+          <p class="muted" style="margin-top:8px">Multimodal model for image understanding, OCR and UI reasoning.</p>
+          <p class="soft" style="font-size:12px;margin-top:4px">Vision+Text • Region prompts • OCR++</p>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+            <a class="btn btn-primary" href="#docs">API Docs →</a>
+            <a class="btn btn-ghost" href="#benchmarks">Benchmarks</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="benchmarks">
+    <div class="container">
+      <div style="text-align:center">
+        <div class="badge">Benchmarks</div>
+        <h2 class="title">State-of-the-art where it counts</h2>
+        <p class="subtitle">Transparent, reproducible evals across public leaderboards and customer-defined tasks.</p>
+      </div>
+      <div class="grid grid-4" style="margin-top:20px">
+        <div class="card" style="text-align:center"><div class="soft">MMLU-Pro</div><div style="font-weight:800;font-size:28px;margin-top:6px">84.1</div></div>
+        <div class="card" style="text-align:center"><div class="soft">GPQA-Diamond</div><div style="font-weight:800;font-size:28px;margin-top:6px">62.7</div></div>
+        <div class="card" style="text-align:center"><div class="soft">Arena-Hard</div><div style="font-weight:800;font-size:28px;margin-top:6px">Win 59%</div></div>
+        <div class="card" style="text-align:center"><div class="soft">MT-Bench</div><div style="font-weight:800;font-size:28px;margin-top:6px">8.3</div></div>
+      </div>
+      <p class="soft" style="text-align:center;font-size:12px;margin-top:6px">* Placeholder values — replace with your latest numbers & sources.</p>
+    </div>
+  </section>
+
+  <section id="docs">
+    <div class="container">
+      <div style="text-align:center">
+        <div class="badge">Developers</div>
+        <h2 class="title">Build in minutes</h2>
+        <p class="subtitle">Drop-in SDKs for TypeScript and Python.</p>
+      </div>
+      <div class="grid grid-2" style="margin-top:20px">
+        <div class="card">
+          <div class="terminal">// TypeScript
+import { ICEMind } from "icemind";
+const icemind = new ICEMind({ apiKey: process.env.ICEMIND_KEY });
+const stream = await icemind.chat.completions.create({
+  model: "ice-pro-2.1",
+  messages: [{ role: "user", content: "Draft a product spec" }],
+  stream: true,
+});
+for await (const token of stream) process.stdout.write(token);</div>
+        </div>
+        <div class="card">
+          <div class="terminal"># Python
+from icemind import ICEMind
+cli = ICEMind(api_key=os.environ["ICEMIND_KEY"])
+for token in cli.chat.completions.create(
+    model="ice-pro-2.1",
+    messages=[{"role":"user","content":"Summarize this contract"}],
+    stream=True,
+):
+    print(token, end="")</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="container">
+      <div style="text-align:center">
+        <div class="badge">Pricing</div>
+        <h2 class="title">Simple, usage-based</h2>
+        <p class="subtitle">Scale up or down without surprises. Custom enterprise plans available.</p>
+      </div>
+      <div class="grid grid-3" style="margin-top:20px">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">Builder</h3><span class="chip">Monthly</span></div>
+          <div style="font-weight:800;font-size:22px;margin-top:6px">$0.60 / 1M tokens</div>
+          <ul class="list">
+            <li>100k free tokens</li><li>Community support</li><li>Shared GPUs</li>
+          </ul>
+          <a class="btn btn-primary" style="margin-top:12px" href="#">Get started →</a>
+        </div>
+        <div class="card" style="background:#fff;color:#000">
+          <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">Scale</h3><span class="chip" style="background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.12)">Monthly</span></div>
+          <div style="font-weight:800;font-size:22px;margin-top:6px">$1.80 / 1M tokens</div>
+          <ul class="list" style="color:#111">
+            <li>SLA 99.95%</li><li>Private rate limits</li><li>Priority GPUs</li>
+          </ul>
+          <a class="btn" style="margin-top:12px;background:#000;color:#fff" href="#">Get started →</a>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">Enterprise</h3><span class="chip">Annual</span></div>
+          <div style="font-weight:800;font-size:22px;margin-top:6px">Custom</div>
+          <ul class="list">
+            <li>US-only data</li><li>SAML/SCIM</li><li>Dedicated clusters</li>
+          </ul>
+          <a class="btn btn-primary" style="margin-top:12px" href="#">Contact sales →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta">
+    <div class="container">
+      <div class="cta">
+        <div class="grid grid-2" style="align-items:center">
+          <div>
+            <h3 style="margin:0;font-size:24px">Ship with ICEMIND</h3>
+            <p class="muted" style="margin-top:6px">Bring your roadmap. We bring the models, tooling and GPUs. Your users feel the speed immediately.</p>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+            <a class="btn btn-primary" href="#">Talk to sales
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2h-4M3 9V5a2 2 0 0 1 2-2h4M21 3l-7 7M21 3v6h-6" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="btn btn-ghost" href="#">GitHub
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.5c0 4.85 3.15 8.96 7.51 10.41.55.1.75-.24.75-.53 0-.26-.01-1.13-.02-2.05-3.05.66-3.7-1.3-3.7-1.3-.5-1.26-1.22-1.6-1.22-1.6-.99-.68.08-.67.08-.67 1.09.08 1.66 1.12 1.66 1.12.98 1.67 2.57 1.19 3.2.91.1-.71.39-1.19.71-1.46-2.44-.28-5-1.22-5-5.42 0-1.2.43-2.19 1.12-2.97-.11-.27-.49-1.37.1-2.86 0 0 .93-.3 3.05 1.14A10.7 10.7 0 0 1 12 6.8c.94 0 1.89.13 2.78.38 2.12-1.44 3.05-1.14 3.05-1.14.59 1.49.21 2.59.1 2.86.7.78 1.12 1.77 1.12 2.97 0 4.21-2.56 5.13-5 5.4.4.34.76 1.02.76 2.06 0 1.49-.01 2.69-.01 3.06 0 .29.2.64.76.53A10.54 10.54 0 0 0 23.02 11.5C23.02 5.24 18.27.5 12 .5Z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-row">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="logo" style="width:28px;height:28px;border-radius:9px"></div>
+        <span class="soft" style="font-size:13px">© <span id="yr"></span> ICEMIND, Inc. All rights reserved. Built in the USA.</span>
+      </div>
+      <div style="display:flex;gap:14px;font-size:14px" class="soft">
+        <a href="#">Security</a><a href="#">Status</a><a href="#">Privacy</a><a href="#">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      const id = a.getAttribute('href').slice(1); if (!id) return;
+      const el = document.getElementById(id);
+      if (el){ e.preventDefault(); window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth' }); }
+    });
+  });
+
+  const disc = document.getElementById('disclaimer');
+  disc.style.display = 'block';
+  document.getElementById('disc-ok').addEventListener('click', () => { disc.remove(); });
+
+  const canvas = document.getElementById('gl');
+  const gl = canvas.getContext('webgl', { antialias: true, alpha: false, depth: true, stencil: false, preserveDrawingBuffer: false });
+  if (!gl) { console.warn('WebGL not available'); }
+
+  const DPR = Math.min(2.0, window.devicePixelRatio || 1);
+  let vw=0, vh=0, aspect=1;
+  function resize() {
+    vw = canvas.clientWidth | 0;
+    vh = canvas.clientHeight | 0;
+    const w = Math.max(1, (vw * DPR) | 0);
+    const h = Math.max(1, (vh * DPR) | 0);
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w; canvas.height = h; aspect = w / h;
+      gl.viewport(0, 0, w, h);
+    }
+  }
+  window.addEventListener('resize', resize, { passive: true });
+
+  // ---------- Shaders (with "hot" arrays for sequential pulses) ----------
+  const vsPoints = `
+  #define MAX_HOT 64
+  attribute vec3 aPos;
+  attribute float aPhase;
+  attribute float aId;
+  uniform mat4 uProj, uView;
+  uniform float uTime;
+  uniform float uSize;
+  uniform vec3 uCam;
+  varying float vDepth;
+  varying float vGlow;
+  varying float vId;
+  vec3 displace(vec3 p, float ph, float t){
+    vec3 n = vec3(
+      sin(t*0.65 + ph + p.x*1.7) * 0.6 + sin(t*0.23 + p.z*1.1)*0.4,
+      sin(t*0.52 + ph*1.3 + p.y*1.3) * 0.6 + cos(t*0.31 + p.x*0.9)*0.3,
+      cos(t*0.48 + ph*0.7 + p.z*1.5) * 0.6 + sin(t*0.19 + p.y*0.8)*0.3
+    );
+    return p + n * 0.08;
+  }
+  void main(){
+    vec3 p = displace(aPos, aPhase, uTime);
+    float dist = distance(p, uCam);
+    vDepth = dist;
+    vGlow = 0.6 + 0.4 * sin(uTime*1.2 + aPhase*2.7);
+    vId = aId;
+    gl_Position = uProj * uView * vec4(p, 1.0);
+    float ps = uSize * (1.6 / (0.6 + dist));
+    gl_PointSize = ps;
+  }`;
+
+  const fsPoints = `
+  #define MAX_HOT 64
+  precision highp float;
+  varying float vDepth;
+  varying float vGlow;
+  varying float vId;
+  uniform vec3 uColorA;
+  uniform vec3 uColorB;
+  uniform vec3 uFog;
+  uniform float uFogNear;
+  uniform float uFogFar;
+  uniform int uHotCount;
+  uniform float uHotIds[MAX_HOT];
+  uniform float uHotWeights[MAX_HOT];
+  void main(){
+    vec2 uv = gl_PointCoord * 2.0 - 1.0;
+    float r = dot(uv, uv);
+    if (r > 1.0) discard;
+    float alpha = smoothstep(1.0, 0.2, r);
+    float pulse = 0.0;
+    for (int i=0;i<MAX_HOT;i++){
+      if (i < uHotCount){
+        float match = 1.0 - step(0.5, abs(vId - uHotIds[i]));
+        pulse += uHotWeights[i] * match;
+      }
+    }
+    pulse = clamp(pulse, 0.0, 2.4);
+    vec3 base = mix(uColorA, uColorB, vGlow*0.5+0.5);
+    vec3 col = base * (0.8 + 0.6 * smoothstep(0.8, 0.0, r));
+    col += pulse * vec3(0.70, 0.95, 1.35);
+    float fog = clamp((vDepth - uFogNear) / (uFogFar - uFogNear), 0.0, 1.0);
+    col = mix(col, uFog, fog);
+    float a = alpha * (1.05 + 0.55 * pulse);
+    gl_FragColor = vec4(col, a);
+  }`;
+
+  const vsLines = `
+  #define MAX_HOT 64
+  attribute vec3 aPos;
+  attribute float aPhase;
+  attribute float aEid;
+  uniform mat4 uProj, uView;
+  uniform float uTime;
+  varying float vDepth;
+  varying float vEid;
+  vec3 displace(vec3 p, float ph, float t){
+    vec3 n = vec3(
+      sin(t*0.65 + ph + p.x*1.7) * 0.6 + sin(t*0.23 + p.z*1.1)*0.4,
+      sin(t*0.52 + ph*1.3 + p.y*1.3) * 0.6 + cos(t*0.31 + p.x*0.9)*0.3,
+      cos(t*0.48 + ph*0.7 + p.z*1.5) * 0.6 + sin(t*0.19 + p.y*0.8)*0.3
+    );
+    return p + n * 0.08;
+  }
+  void main(){
+    vec3 p = displace(aPos, aPhase, uTime);
+    vec4 clip = uProj * uView * vec4(p,1.0);
+    vDepth = length(p);
+    vEid = aEid;
+    gl_Position = clip;
+  }`;
+
+  const fsLines = `
+  #define MAX_HOT 64
+  precision highp float;
+  varying float vDepth;
+  varying float vEid;
+  uniform vec3 uColorLine;
+  uniform vec3 uFog;
+  uniform float uFogNear;
+  uniform float uFogFar;
+  uniform int uHotEdgeCount;
+  uniform float uHotEdgeIds[MAX_HOT];
+  uniform float uHotEdgeWeights[MAX_HOT];
+  void main(){
+    float pulse = 0.0;
+    for (int i=0;i<MAX_HOT;i++){
+      if (i < uHotEdgeCount){
+        float match = 1.0 - step(0.5, abs(vEid - uHotEdgeIds[i]));
+        pulse += uHotEdgeWeights[i] * match;
+      }
+    }
+    float alpha = 0.16 + pulse * 0.70;
+    vec3 base = uColorLine + pulse * vec3(0.55, 0.85, 1.50);
+    float fog = clamp((vDepth - uFogNear) / (uFogFar - uFogNear), 0.0, 1.0);
+    vec3 col = mix(base, uFog, fog);
+    gl_FragColor = vec4(col, alpha * (1.0 - fog*0.6));
+  }`;
+
+  function compile(type, src){
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src); gl.compileShader(sh);
+    if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh)||'shader error');
+    return sh;
+  }
+  function program(vs, fs){
+    const p = gl.createProgram();
+    gl.attachShader(p, compile(gl.VERTEX_SHADER, vs));
+    gl.attachShader(p, compile(gl.FRAGMENT_SHADER, fs));
+    gl.linkProgram(p);
+    if(!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)||'link error');
+    return p;
+  }
+
+  const progPoints = program(vsPoints, fsPoints);
+  const progLines  = program(vsLines,  fsLines);
+
+  function locs(prog, names){
+    const o = {};
+    names.forEach(n => o[n] = gl.getUniformLocation(prog, n));
+    return o;
+  }
+  const upP = locs(progPoints, ['uProj','uView','uTime','uSize','uColorA','uColorB','uFog','uFogNear','uFogFar','uCam','uHotCount','uHotIds','uHotWeights']);
+  const upL = locs(progLines,  ['uProj','uView','uTime','uColorLine','uFog','uFogNear','uFogFar','uHotEdgeCount','uHotEdgeIds','uHotEdgeWeights']);
+
+  function rand(n){ let x = Math.sin(n*127.1)*43758.5453; return x - Math.floor(x); }
+
+  // ---------- Geometry (fills more at sides) ----------
+  const NODE_DENSITY = 0.9;
+  const N = Math.floor(720 * NODE_DENSITY);
+  const K = 3;
+  const pos = new Float32Array(N*3);
+  const phase = new Float32Array(N);
+  const ids = new Float32Array(N);
+  let i=0;
+  const grid = Math.cbrt(N) | 0;
+  const spread = 5.4;
+  for (let z=0; z<grid; z++){
+    for (let y=0; y<grid; y++){
+      for (let x=0; x<grid; x++){
+        if (i>=N) break;
+        const j = i*3;
+        pos[j+0] = ((x/(grid-1))*2-1)*spread + (rand(i+1)-0.5)*0.7;
+        pos[j+1] = ((y/(grid-1))*2-1)*spread + (rand(i+2)-0.5)*0.7;
+        pos[j+2] = ((z/(grid-1))*2-1)*spread + (rand(i+3)-0.5)*0.7;
+        phase[i] = rand(i+101)*6.28318;
+        ids[i] = i;
+        i++;
+      }
+    }
+  }
+
+  // KNN edges + index
+  const idxPairs = [];
+  const edgeIndex = new Map(); // compact key -> edgeId
+  for (let a=0; a<N; a++){
+    const ax = pos[a*3], ay = pos[a*3+1], az = pos[a*3+2];
+    const dists = [];
+    for (let b=0; b<N; b++){
+      if (a===b) continue;
+      const dx = ax - pos[b*3], dy = ay - pos[b*3+1], dz = az - pos[b*3+2];
+      const d2 = dx*dx+dy*dy+dz*dz;
+      dists.push([d2, b]);
+    }
+    dists.sort((u,v)=>u[0]-v[0]);
+    for (let k=0; k<K; k++){
+      const b = dists[k][1];
+      const mn = a<b ? a:b, mx = a<b ? b:a;
+      const key = (mn<<12) + mx;
+      if (!edgeIndex.has(key)){
+        const e = idxPairs.length;
+        idxPairs.push(mn, mx);
+        edgeIndex.set(key, e>>1);
+      }
+    }
+  }
+  const M = idxPairs.length/2;
+
+  // Lines buffers
+  const linePos = new Float32Array(M*2*3);
+  const linePhase = new Float32Array(M*2);
+  const lineEdgeId = new Float32Array(M*2);
+  for (let e=0; e<M; e++){
+    const a = idxPairs[e*2], b = idxPairs[e*2+1];
+    const aj = a*3, bj = b*3;
+    const ej = e*2*3;
+    linePos[ej+0]=pos[aj];   linePos[ej+1]=pos[aj+1]; linePos[ej+2]=pos[aj+2];
+    linePos[ej+3]=pos[bj];   linePos[ej+4]=pos[bj+1]; linePos[ej+5]=pos[bj+2];
+    linePhase[e*2+0] = phase[a];
+    linePhase[e*2+1] = phase[b];
+    lineEdgeId[e*2+0] = e;
+    lineEdgeId[e*2+1] = e;
+  }
+
+  // Adjacency for path traversal
+  const adj = Array.from({length:N}, ()=>[]);
+  for (let e=0; e<M; e++){
+    const a = idxPairs[e*2], b = idxPairs[e*2+1];
+    adj[a].push(b); adj[b].push(a);
+  }
+
+  // Buffers / VAOs
+  function makeBuffer(target, data, attribLoc, size, type=gl.FLOAT){
+    const buf = gl.createBuffer();
+    gl.bindBuffer(target, buf);
+    gl.bufferData(target, data, gl.STATIC_DRAW);
+    if (attribLoc !== null){
+      gl.enableVertexAttribArray(attribLoc);
+      gl.vertexAttribPointer(attribLoc, size, type, false, 0, 0);
+    }
+    return buf;
+  }
+  const aP_Pos = gl.getAttribLocation(progPoints, 'aPos');
+  const aP_Ph  = gl.getAttribLocation(progPoints, 'aPhase');
+  const aP_Id  = gl.getAttribLocation(progPoints, 'aId');
+
+  const aL_Pos = gl.getAttribLocation(progLines, 'aPos');
+  const aL_Ph  = gl.getAttribLocation(progLines, 'aPhase');
+  const aL_Eid = gl.getAttribLocation(progLines, 'aEid');
+
+  const vaoPoints = gl.createVertexArray ? gl.createVertexArray() : null;
+  if (vaoPoints && gl.bindVertexArray){ gl.bindVertexArray(vaoPoints); }
+  const bufP_Pos = makeBuffer(gl.ARRAY_BUFFER, pos, aP_Pos, 3);
+  const bufP_Ph  = makeBuffer(gl.ARRAY_BUFFER, phase, aP_Ph, 1);
+  const bufP_Id  = makeBuffer(gl.ARRAY_BUFFER, ids, aP_Id, 1);
+  if (vaoPoints && gl.bindVertexArray){ gl.bindVertexArray(null); }
+
+  const vaoLines = gl.createVertexArray ? gl.createVertexArray() : null;
+  if (vaoLines && gl.bindVertexArray){ gl.bindVertexArray(vaoLines); }
+  const bufL_Pos = makeBuffer(gl.ARRAY_BUFFER, linePos, aL_Pos, 3);
+  const bufL_Ph  = makeBuffer(gl.ARRAY_BUFFER, linePhase, aL_Ph, 1);
+  const bufL_Eid = makeBuffer(gl.ARRAY_BUFFER, lineEdgeId, aL_Eid, 1);
+  if (vaoLines && gl.bindVertexArray){ gl.bindVertexArray(null); }
+
+  // Camera: slightly lower sensitivity
+  let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+  window.addEventListener('pointermove', (e)=>{
+    const r = canvas.getBoundingClientRect();
+    const mx = (e.clientX - r.left) / r.width * 2 - 1;
+    const my = (e.clientY - r.top) / r.height * 2 - 1;
+    targetX = mx; targetY = my;
+  }, { passive: true });
+  function lerp(a,b,t){ return a + (b-a)*t; }
+
+  function perspective(fovy, aspect, near, far){
+    const f = 1.0 / Math.tan(fovy/2);
+    const nf = 1/(near-far);
+    return new Float32Array([
+      f/aspect,0,0,0,
+      0,f,0,0,
+      0,0,(far+near)*nf,-1,
+      0,0,(2*far*near)*nf,0
+    ]);
+  }
+  function lookAt(eye,center,up){
+    const [ex,ey,ez]=eye,[cx,cy,cz]=center,[ux,uy,uz]=up;
+    let zx=ex-cx, zy=ey-cy, zz=ez-cz;
+    let zl = Math.hypot(zx,zy,zz); zx/=zl; zy/=zl; zz/=zl;
+    let xx=uy*zz-uz*zy, xy=uz*zx-ux*zz, xz=ux*zy-uy*zx;
+    let xl = Math.hypot(xx,xy,xz); xx/=xl; xy/=xl; xz/=xl;
+    let yx=zy*xz-zz*xy, yy=zz*xx-zx*xz, yz=zx*xy-zy*xx;
+    return new Float32Array([
+      xx, yx, zx, 0,
+      xy, yy, zy, 0,
+      xz, yz, zz, 0,
+      -(xx*ex+xy*ey+xz*ez),
+      -(yx*ex+yy*ey+yz*ez),
+      -(zx*ex+zy*ey+zz*ez),
+      1
+    ]);
+  }
+
+  // ---------- Sequential electric pulses ----------
+  const MAX_HOT = 64;
+  const hotNodeIds = new Float32Array(MAX_HOT);
+  const hotNodeW  = new Float32Array(MAX_HOT);
+  const hotEdgeIds= new Float32Array(MAX_HOT);
+  const hotEdgeW  = new Float32Array(MAX_HOT);
+  let hotNodeCount = 0, hotEdgeCount = 0;
+
+  const pulses = [];
+  function spawnPulse(t){
+    const start = (Math.random()*N)|0;
+    const maxLen = 14 + ((Math.random()*10)|0); // 14–24 hops
+    const hop = 0.055 + Math.random()*0.035;   // seconds per hop
+    const fade = hop * 0.80;                    // tighter => secuencial claro
+    const nodes = [start];
+    const edges = [];
+    const visited = new Set([start]);
+    let cur = start, prev = -1;
+
+    for (let s=0; s<maxLen; s++){
+      const neigh = adj[cur];
+      if (!neigh.length) break;
+      // prefer neighbors not visited to keep camino "nuevo"
+      let candidates = neigh.filter(n=>!visited.has(n));
+      if (candidates.length===0) candidates = neigh.slice();
+      // avoid backtracking si hay alternativas
+      if (prev!==-1 && candidates.length>1){
+        candidates = candidates.filter(n=>n!==prev);
+        if (candidates.length===0) candidates = neigh.slice();
+      }
+      const next = candidates[(Math.random()*candidates.length)|0];
+      const mn = cur<next?cur:next, mx = cur<next?next:cur;
+      const key = (mn<<12)+mx;
+      const e = edgeIndex.get(key);
+      if (e!==undefined){
+        edges.push(e);
+        nodes.push(next);
+        visited.add(next);
+        prev = cur; cur = next;
+      } else break;
+    }
+
+    if (edges.length>0) pulses.push({t0:t, hop, fade, nodes, edges});
+  }
+
+  let t0 = performance.now();
+  let last = 0;
+  const targetFPS = 60;
+  const frameInt = 1000/targetFPS;
+  let nextSpawn = 1.6 + Math.random()*2.2;
+
+  function render(now){
+    if ((now - last) < frameInt) { requestAnimationFrame(render); return; }
+    last = now;
+    resize();
+    const time = (now - t0) / 1000;
+
+    // camera, less sensitive and smoother
+    mouseX = lerp(mouseX, targetX, 0.05);
+    mouseY = lerp(mouseY, targetY, 0.05);
+    const camRadius = 9.4;
+    const yaw = mouseX * 0.28;
+    const pitch = -0.22 + mouseY * 0.10;
+    const eye = [
+      Math.cos(yaw) * Math.cos(pitch) * camRadius,
+      Math.sin(pitch) * camRadius * 0.85,
+      Math.sin(yaw) * Math.cos(pitch) * camRadius
+    ];
+    const center = [0,0,0];
+    const up = [0,1,0];
+
+    const proj = perspective(45 * Math.PI/180, aspect, 0.1, 60.0);
+    const view = lookAt(eye, center, up);
+
+    // spawn pulses cada ~1.6–3.8s
+    if (time > nextSpawn){
+      spawnPulse(time);
+      nextSpawn = time + 1.6 + Math.random()*2.2;
+    }
+
+    // construir "hot" arrays (nodos y aristas) con propagación secuencial
+    hotNodeCount = 0; hotEdgeCount = 0;
+    for (let p=0; p<pulses.length; p++){
+      const P = pulses[p];
+      let active = false;
+      const lenN = P.nodes.length;
+      const lenE = P.edges.length;
+
+      // índice de "cabeza" del pulso
+      const sHeadFloat = (time - P.t0) / P.hop;
+      const sHead = Math.floor(sHeadFloat);
+
+      // nodos
+      for (let s=0; s<lenN; s++){
+        const arrive = P.t0 + s*P.hop;
+        const dt = time - arrive;
+        const w = Math.max(0, 1 - Math.abs(dt)/P.fade); // triangular
+        if (w>0.01){
+          active = true;
+          if (hotNodeCount < MAX_HOT){
+            const boost = (s === sHead || s === sHead+1) ? 2.4 : 1.6; // cabeza más brillante
+            hotNodeIds[hotNodeCount] = P.nodes[s];
+            hotNodeW[hotNodeCount] = Math.pow(w, 1.9) * boost;
+            hotNodeCount++;
+          }
         }
+      }
 
-        // Efecto de acercamiento al centro
-        function updateActiveItem() {
-            const rotation = getComputedStyle(carousel).transform;
-            const values = rotation.split('(')[1].split(')')[0].split(',');
-            const angleY = Math.atan2(values[8], values[10]) * (180 / Math.PI);
-            let index = Math.round(-angleY / angle) % itemCount;
-            if (index < 0) index += itemCount;
-
-            for (let i = 0; i < itemCount; i++) {
-                items[i].classList.remove('active');
-            }
-            items[index].classList.add('active');
+      // aristas: centrar el glow entre nodos, justo después del nodo
+      for (let s=0; s<lenE; s++){
+        const arrive = P.t0 + (s+0.5)*P.hop;
+        const dt = time - arrive;
+        const w = Math.max(0, 1 - Math.abs(dt)/P.fade);
+        if (w>0.01){
+          active = true;
+          if (hotEdgeCount < MAX_HOT){
+            const boost = (s === sHead) ? 2.0 : 1.4;
+            hotEdgeIds[hotEdgeCount] = P.edges[s];
+            hotEdgeW[hotEdgeCount] = Math.pow(w, 1.7) * boost;
+            hotEdgeCount++;
+          }
         }
+      }
 
-        setInterval(updateActiveItem, 100);
+      // retirar pulso viejo
+      const endTime = P.t0 + lenN*P.hop + P.fade + 0.3;
+      if (!active && time > endTime){ pulses.splice(p,1); p--; }
+    }
 
-        // JavaScript para deslizar con la rueda del ratón o touchpad
-        let currentAngle = 0;
-        function rotateCarousel(delta) {
-            const adjustedSpeed = delta * 0.05; // Ajusta la sensibilidad del desplazamiento
-            currentAngle += adjustedSpeed;
-            carousel.style.transform = `rotateY(${currentAngle}deg)`;
-        }
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthMask(true);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.clearColor(0.027, 0.033, 0.055, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        document.addEventListener('wheel', function(e) {
-            e.preventDefault();
-            rotateCarousel(e.deltaY);
-        }, { passive: false });
+    const fogColor = [0.027, 0.033, 0.055];
+    const fogNear = 4.0, fogFar = 18.0;
 
-        // Movimiento lento y constante del carrusel
-        function autoRotate() {
-            if (autorotate) {
-                rotateCarousel(rotationSpeed);
-            }
-        }
-        setInterval(autoRotate, 50);
+    // Lines
+    gl.useProgram(progLines);
+    if (vaoLines && gl.bindVertexArray){ gl.bindVertexArray(vaoLines); }
+    else {
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufL_Pos);
+      gl.enableVertexAttribArray(aL_Pos); gl.vertexAttribPointer(aL_Pos,3,gl.FLOAT,false,0,0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufL_Ph);
+      gl.enableVertexAttribArray(aL_Ph); gl.vertexAttribPointer(aL_Ph,1,gl.FLOAT,false,0,0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufL_Eid);
+      gl.enableVertexAttribArray(aL_Eid); gl.vertexAttribPointer(aL_Eid,1,gl.FLOAT,false,0,0);
+    }
+    gl.uniformMatrix4fv(upL.uProj,false,proj);
+    gl.uniformMatrix4fv(upL.uView,false,view);
+    gl.uniform1f(upL.uTime, time);
+    gl.uniform3f(upL.uColorLine, 0.35, 0.58, 1.0);
+    gl.uniform3f(upL.uFog, fogColor[0], fogColor[1], fogColor[2]);
+    gl.uniform1f(upL.uFogNear, fogNear);
+    gl.uniform1f(upL.uFogFar, fogFar);
+    gl.uniform1i(upL.uHotEdgeCount, hotEdgeCount);
+    gl.uniform1fv(upL.uHotEdgeIds, hotEdgeIds);
+    gl.uniform1fv(upL.uHotEdgeWeights, hotEdgeW);
+    gl.lineWidth(1);
+    gl.drawArrays(gl.LINES, 0, M*2);
 
-        // Botón para activar/desactivar la rotación automática
-        const autorotationBtn = document.getElementById('autorotation-btn');
-        autorotationBtn.addEventListener('click', function() {
-            autorotate = !autorotate;
-        });
-    </script>
+    // Points
+    gl.useProgram(progPoints);
+    if (vaoPoints && gl.bindVertexArray){ gl.bindVertexArray(vaoPoints); }
+    else {
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufP_Pos);
+      gl.enableVertexAttribArray(aP_Pos); gl.vertexAttribPointer(aP_Pos,3,gl.FLOAT,false,0,0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufP_Ph);
+      gl.enableVertexAttribArray(aP_Ph); gl.vertexAttribPointer(aP_Ph,1,gl.FLOAT,false,0,0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, bufP_Id);
+      gl.enableVertexAttribArray(aP_Id); gl.vertexAttribPointer(aP_Id,1,gl.FLOAT,false,0,0);
+    }
+    gl.uniformMatrix4fv(upP.uProj,false,proj);
+    gl.uniformMatrix4fv(upP.uView,false,view);
+    gl.uniform1f(upP.uTime, time);
+    gl.uniform1f(upP.uSize, 8.8 * DPR);
+    gl.uniform3f(upP.uColorA, 0.35, 0.78, 1.0);
+    gl.uniform3f(upP.uColorB, 0.52, 0.42, 1.0);
+    gl.uniform3f(upP.uFog, fogColor[0], fogColor[1], fogColor[2]);
+    gl.uniform1f(upP.uFogNear, fogNear);
+    gl.uniform1f(upP.uFogFar, fogFar);
+    gl.uniform3f(upP.uCam, eye[0], eye[1], eye[2]);
+    gl.uniform1i(upP.uHotCount, hotNodeCount);
+    gl.uniform1fv(upP.uHotIds, hotNodeIds);
+    gl.uniform1fv(upP.uHotWeights, hotNodeW);
+    gl.drawArrays(gl.POINTS, 0, N);
+
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+
+  window.addEventListener('keydown',(e)=>{
+    if (e.key==='s' || e.key==='S'){
+      const a=document.createElement('a'); a.download=`icemind_${Date.now()}.png`; a.href=canvas.toDataURL('image/png'); a.click();
+    }
+  });
+</script>
+
 </body>
 </html>
